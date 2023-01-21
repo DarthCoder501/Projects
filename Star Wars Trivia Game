@@ -1,6 +1,7 @@
 #function to play the game 
 def new_quiz_game():
-
+  
+#Beginning values for what letter choice the user guessed, how many right guesses they had, and what question they are on
   guesses = []
   right_guesses = 0
   question_number = 1
@@ -57,7 +58,7 @@ def play_again():
   else: 
     return False 
     
-#List of questions for the game and the correct answer choice
+#Dictionary of questions for the game and the correct answer choice
 questions = {
   "Where did Obi-wan take Luke after his birth?": "D",
   "Who was Anakin Skywalkere's Padawan?": "C",
@@ -71,6 +72,7 @@ questions = {
   "What name did Obi-Wan go by on Tatoonie?": "D",
   "Who voiced Darth Vader in the original trilogy?": "B"
 }
+
 #List of the answer choices for each question 
 answer_choices = [["A. Hoth", "B. Naboo", "C. Alderaan", "D. Tatoonie"],
                  ["A. Jaden Korr", "B. Knox", "C. Ahsoka Tano", "D. Barriss Offee"], 
@@ -86,7 +88,7 @@ answer_choices = [["A. Hoth", "B. Naboo", "C. Alderaan", "D. Tatoonie"],
 
 new_quiz_game()
 
-#Restarts a new game but if players declines then it prints a message 
+#Starts a new game but if players declines then it prints a message 
 while play_again(): 
   new_quiz_game()
 
