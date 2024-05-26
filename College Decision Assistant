@@ -1,28 +1,27 @@
+import itertools
+
 # Asks the user to input the number of colleges they want to compare
 num_colleges = int(input("How many colleges are you choosing between?: "))
 
 # Collects the names of the colleges
-def college_names(): 
+def college_names():
     colleges = []
     # Loop through each college to collect its name
     for i in range(num_colleges):
         # Prompt the user to input the name of each college
         college_name = input(f"Enter the name of college {i+1}: ")
         # Append the name of the college to the list of colleges
-        colleges.append((college_name))
+        colleges.append(college_name)  # Fixed parentheses here
     return colleges
 
 # Store the names of the colleges in a list
 colleges = college_names()
 
 # Asks the user to input the most important factors
-factors = input("Name the most important factors to you separated by commas: ")
+factors_input = input("Name the most important factors to you separated by commas: ")
 
 # Split the input string by commas to get a list of factors
-elements = factors.split(',')
-
-# Convert the elements into a list with elements stripped of whitespace and titlecased 
-factors = [element.strip().title() for element in elements]
+factors = [factor.strip().title() for factor in factors_input.split(',')]
 
 # Creates an empty dictionary to store the factors and their importance rankings provided by the user
 importance_rankings = {}
@@ -30,8 +29,8 @@ importance_rankings = {}
 # Collects the importance rankings for each factor
 def factor_importance_ranking():
     # Iterate through each factor to collect its importance ranking
-    for factor in factors: 
-        # Ensures valid input 
+    for factor in factors:
+        # Ensures valid input
         while True:
             try:
                 # Asks the user to rank the importance of the factor on a scale of 0 to 100
@@ -44,7 +43,7 @@ def factor_importance_ranking():
                 else:
                     print("Please enter a number between 0 and 100.")
             except ValueError:
-                print("Please enter a valid integer.")    
+                print("Please enter a valid integer.")
 
 # Call the function to collect the importance rankings for each factor
 factor_importance_ranking()
@@ -54,26 +53,30 @@ college_points = {college: 0 for college in colleges}
 
 # Function to compare colleges for each factor and assign points
 def compare_colleges():
-    for college in colleges:
-        print(f"\nComparing colleges for {college}:")
+    # Iterate over each combination of colleges
+    for college1, college2 in itertools.combinations(colleges, 2):
+        # Print the comparison being made
+        print(f"\nComparing {college1} and {college2}:")
+        # Iterate over each factor
         for factor in factors:
-            rating = input(f"How does {college} compare to the other colleges in {factor}? (Better/Similar/Worse): ").strip().lower()
+            # Ask the user to compare the two colleges for the current factor
+            rating = input(f"How does {college1} compare to {college2} in {factor}? (Better/Similar/Worse): ").strip().lower()
+            # Assign points based on the user's input
             if rating == "better":
-                college_points[college] += 1 * importance_rankings[factor]
+                college_points[college1] += 1 * importance_rankings[factor]
             elif rating == "similar":
-#Iterates over each college in the list colleges, Filters out the current college being evaluated, Adds the filtered colleges to a new list similar_colleges
-                similar_colleges = [c for c in colleges if c != college]
-# Calculate points for similar colleges based on factor importance, Ensure current college receives points even if no similar colleges exist
-                points_per_college = importance_rankings[factor] / (len(similar_colleges) + 1)
-# Initiate a loop that iterates over each college in the similar_colleges list.
-                for similar_college in similar_colleges:
-#Distributed points evenly among similar colleges, giving them each a portion of the total points calculated based on the importance of the factor.
-                    college_points[similar_college] += points_per_college
+                # Calculate points for similar colleges based on factor importance
+                points_per_college = importance_rankings[factor] / 2
+                # Distribute points evenly among similar colleges
+                college_points[college1] += points_per_college
+                college_points[college2] += points_per_college
+            elif rating == "worse":
+                college_points[college2] += 1 * importance_rankings[factor]
 
 # Call the function to compare colleges and assign points
 compare_colleges()
 
-# Print points for each college
-print("\nPoints for each college:")
+# Print total points for each college
+print("\nTotal points for each college:")
 for college, points in college_points.items():
     print(f"{college}: {points} points")
